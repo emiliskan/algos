@@ -30,5 +30,5 @@ def calc(a):
     return max(dists)
 
 
-# a = sys.stdin.readline().split()
+a = sys.stdin.readline().split()
 print(calc("2 0 1 1 0 1 0 2 1 2".split()))
