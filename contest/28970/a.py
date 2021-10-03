@@ -1,5 +1,5 @@
 """
-https://contest.yandex.ru/contest/28970/problems/
+https://contest.yandex.ru/contest/28970/problems/A
 """
 
 import sys
