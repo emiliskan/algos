@@ -2,15 +2,16 @@ import random
 import time
 
 # MAX_NUM = 999_999_999
-# CHUNK_SIZE = 1_000_000
-MAX_NUM = 99_999
-CHUNK_SIZE = 10000
+# CHUNK_SIZE = 10_000_000
 
+
+MAX_NUM = 999_999
+CHUNK_SIZE = 100_000
 
 
 def generate_phones():
     num = 1_000_000_000
-    with open('phones_test.csv', 'w') as phones_file:
+    with open('phones_test', 'w') as phones_file:
 
         phones_chunk = []
 

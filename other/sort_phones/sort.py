@@ -1,7 +1,7 @@
 import os
 import time
 
-CHUNK_SIZE = 10000
+CHUNK_SIZE = 10_000_000
 
 
 class BigFileSort:
@@ -31,10 +31,6 @@ class BigFileSort:
 
             self.chunk_files.append(chunk_file_name)
             self.chunk_num += 1
-
-            # Файлы можно удалить сразу, чтоб не занимать память
-            # os.remove(self.chunk_files[i])
-            # os.remove(self.chunk_files[i + 1])
 
             # Если больше файлов нет, значит мы все собрали и последняя запись chunk_files - итоговый файл
             i += 2
@@ -68,11 +64,9 @@ class BigFileSort:
         """
         Сбор батчей и запись файл при превышении CHUNK_SIZE.
         """
-        if len(self.chunk_items) < CHUNK_SIZE:
-            self.chunk_items.append(item)
-            return
-
-        self._write_to_sorted_file()
+        self.chunk_items.append(item)
+        if len(self.chunk_items) == CHUNK_SIZE:
+            self._write_to_sorted_file()
 
     def _write_to_sorted_file(self):
         """
@@ -118,19 +112,25 @@ class BigFileSort:
                 self._write_to_sorted_file()
         return chunk_file_name
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        for i in range(len(self.chunk_files) - 1):
+            os.remove(self.chunk_files[i])
+        print('Cleared files')
+
 
 if __name__ == '__main__':
-    # file_sort = BigFileSort('phones.csv')
-    file_sort = BigFileSort('phones_test.csv')
+    with BigFileSort('phones') as file_sort:
+        start_chunk = time.time()
+        file_sort.create_chunks()
+        end_chunk = time.time()
+        print(f'Chunk create time: {end_chunk - start_chunk}')
 
-    start_chunk = time.time()
-    file_sort.create_chunks()
-    end_chunk = time.time()
-    print(f'Chunk create time: {end_chunk - start_chunk}')
+        start_sort = time.time()
+        file_sort.sort_chunks()
+        end_sort = time.time()
+        print(f'Sort time: {end_sort - start_sort}')
 
-    start_sort = time.time()
-    file_sort.sort_chunks()
-    end_sort = time.time()
-    print(f'Sort time: {end_sort - start_sort}')
-
-    print(f'Total: {end_sort - start_chunk}')
+        print(f'Total: {end_sort - start_chunk}')
