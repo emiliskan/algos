@@ -1,12 +1,8 @@
 import random
 import time
 
-# MAX_NUM = 999_999_999
-# CHUNK_SIZE = 10_000_000
-
-
-MAX_NUM = 999_999
-CHUNK_SIZE = 100_000
+MAX_NUM = 999_999_999
+CHUNK_SIZE = 10_000_000
 
 
 def generate_phones():
