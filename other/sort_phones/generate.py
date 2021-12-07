@@ -1,11 +1,36 @@
 import random
+import time
 
-PHONES_COUNT: int = 1_000_000
+# MAX_NUM = 999_999_999
+# CHUNK_SIZE = 1_000_000
+MAX_NUM = 99_999
+CHUNK_SIZE = 10000
 
 
-with open('phones.csv', 'w') as phones_file:
-    for _ in range(PHONES_COUNT):
-        random_nums = [str(num) for num in random.sample(range(9), 7)]
-        phone = '+79' + ''.join(random_nums) + "\n"
 
-        phones_file.writelines(phone)
+def generate_phones():
+    num = 1_000_000_000
+    with open('phones_test.csv', 'w') as phones_file:
+
+        phones_chunk = []
+
+        for i in range(MAX_NUM):
+            phone = '+79' + str(num)[1:] + "\n"
+            phones_chunk.append(phone)
+            num += 1
+
+            if len(phones_chunk) > CHUNK_SIZE:
+                random.shuffle(phones_chunk)
+                phones_file.writelines(phones_chunk)
+                phones_chunk.clear()
+                print(f"{i / CHUNK_SIZE} chunk")
+
+        random.shuffle(phones_chunk)
+        phones_file.writelines(phones_chunk)
+
+
+if __name__ == '__main__':
+    start = time.time()
+    generate_phones()
+    end = time.time()
+    print(end - start)
